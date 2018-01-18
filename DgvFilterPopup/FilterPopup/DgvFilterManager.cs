@@ -481,14 +481,23 @@ namespace DgvFilterPopup {
                 Filter = mBaseFilter;
 
             // Apply the filter only if any changes occurred
-            try {
-                if (mBindingSource != null) {
-                    if (mBindingSource.Filter != Filter) mBindingSource.Filter = Filter;
-                } else 
+            try
+            {
+                if (mBindingSource != null)
                 {
-                    if (mBoundDataView.RowFilter != Filter)mBoundDataView.RowFilter = Filter;
+                    if (mBindingSource.Filter != Filter) mBindingSource.Filter = Filter;
                 }
-            } catch { Console.WriteLine ("Invalid filter: " + Filter);}
+                else
+                {
+                    if (mBoundDataView.RowFilter != Filter) mBoundDataView.RowFilter = Filter;
+                }
+            }
+            catch(Exception e)
+            {
+#if DEBUG
+                MessageBox.Show("Invalid filter: " + Filter + e);
+#endif
+            }
 
         }
 

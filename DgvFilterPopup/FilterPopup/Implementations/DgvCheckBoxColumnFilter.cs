@@ -48,7 +48,7 @@ namespace DgvFilterPopup {
         protected override void OnFilterInitializing(object sender, CancelEventArgs e) {
             base.OnFilterInitializing(sender, e);
             if (e.Cancel) return;
-            comboBoxOperator.Items.AddRange (new object[] { "=","= Ø", "<> Ø" });
+            comboBoxOperator.Items.AddRange(new object[] { "=" });
             comboBoxOperator.SelectedIndex = 0;
             this.FilterHost.RegisterComboBox(comboBoxOperator);
 
@@ -73,12 +73,13 @@ namespace DgvFilterPopup {
                 return;
             } 
 
-            string ResultFilterExpression = "";
-            string ResultFilterCaption = OriginalDataGridViewColumnHeaderText ;
+            var ResultFilterExpression = "";
+            var ResultFilterCaption = OriginalDataGridViewColumnHeaderText;
+            var BracketedDataPropertyName = "[" + this.DataGridViewColumn.DataPropertyName + "]";
 
             // Managing the NULL and NOT NULL cases which are type-independent
-            if (comboBoxOperator.Text == "= Ø") ResultFilterExpression = GetNullCondition(this.DataGridViewColumn.DataPropertyName);
-            if (comboBoxOperator.Text == "<> Ø") ResultFilterExpression = GetNotNullCondition(this.DataGridViewColumn.DataPropertyName);
+            if (comboBoxOperator.Text == "= Ø") ResultFilterExpression = GetNullCondition(BracketedDataPropertyName);
+            if (comboBoxOperator.Text == "<> Ø") ResultFilterExpression = GetNotNullCondition(BracketedDataPropertyName);
 
             if (ResultFilterExpression != "") {
                 FilterExpression = ResultFilterExpression;
@@ -88,11 +89,11 @@ namespace DgvFilterPopup {
             }
 
             if (checkBoxValue.Checked){
-                    ResultFilterExpression = this.DataGridViewColumn.DataPropertyName + " = 1" ;
+                    ResultFilterExpression = BracketedDataPropertyName + " = 1" ;
                     ResultFilterCaption += "\n = yes" ;
             }
             else {
-                    ResultFilterExpression = this.DataGridViewColumn.DataPropertyName + " = 0" ;
+                    ResultFilterExpression = BracketedDataPropertyName + " = 0" ;
                     ResultFilterCaption += "\n = no" ;
             }
 

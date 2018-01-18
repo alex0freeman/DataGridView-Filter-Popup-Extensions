@@ -89,15 +89,16 @@ namespace DgvFilterPopup {
                 return;
             } 
 
-            string ResultFilterExpression = "";
-            string ResultFilterCaption = OriginalDataGridViewColumnHeaderText ;
+            var ResultFilterExpression = "";
+            var ResultFilterCaption = OriginalDataGridViewColumnHeaderText;
+            var BracketedDataPropertyName = "[" + this.DataGridViewColumn.DataPropertyName + "]";
 
             string FilterValue = textBoxValue.Text;
             string FormattedValue = "";
 
             // Managing the NULL and NOT NULL cases which are type-independent
-            if (comboBoxOperator.Text == "= Ø") ResultFilterExpression = GetNullCondition(this.DataGridViewColumn.DataPropertyName);
-            if (comboBoxOperator.Text == "<> Ø") ResultFilterExpression = GetNotNullCondition(this.DataGridViewColumn.DataPropertyName);
+            if (comboBoxOperator.Text == "= Ø") ResultFilterExpression = GetNullCondition(BracketedDataPropertyName);
+            if (comboBoxOperator.Text == "<> Ø") ResultFilterExpression = GetNotNullCondition(BracketedDataPropertyName);
 
             if (ResultFilterExpression != "") {
                 FilterExpression = ResultFilterExpression;
@@ -111,19 +112,19 @@ namespace DgvFilterPopup {
                 FilterValue = StringEscape(FilterValue);
                 switch (comboBoxOperator.Text) {
                     case "..xxx..":
-                        ResultFilterExpression = this.DataGridViewColumn.DataPropertyName + " LIKE '%" + FilterValue + "%'";
+                        ResultFilterExpression = BracketedDataPropertyName + " LIKE '%" + FilterValue + "%'";
                         ResultFilterCaption += "\n = '.." + FilterValue + "..'";
                         break;
                     case "xxx..":
-                        ResultFilterExpression = this.DataGridViewColumn.DataPropertyName + " LIKE '" + FilterValue + "%'";
+                        ResultFilterExpression = BracketedDataPropertyName + " LIKE '" + FilterValue + "%'";
                         ResultFilterCaption += "\n = '" + FilterValue + "..'";
                         break;
                     case "..xxx":
-                        ResultFilterExpression = this.DataGridViewColumn.DataPropertyName + " LIKE '%" + FilterValue + "'";
+                        ResultFilterExpression = BracketedDataPropertyName + " LIKE '%" + FilterValue + "'";
                         ResultFilterCaption += "\n = '.." + FilterValue + "'";
                         break;
                     default:
-                        ResultFilterExpression = this.DataGridViewColumn.DataPropertyName + " " + comboBoxOperator.Text + "'" + FilterValue + "'";
+                        ResultFilterExpression = BracketedDataPropertyName + " " + comboBoxOperator.Text + "'" + FilterValue + "'";
                         ResultFilterCaption += "\n" + comboBoxOperator.Text + "'" + FilterValue + "'";
                         break;
                 }
@@ -132,7 +133,7 @@ namespace DgvFilterPopup {
                 // Managing the numeric-column case
                 FormattedValue = FormatValue(FilterValue, this.ColumnDataType);
                 if (FormattedValue != "") {
-                    ResultFilterExpression = this.DataGridViewColumn.DataPropertyName + " " + comboBoxOperator.Text + FormattedValue ;
+                    ResultFilterExpression = BracketedDataPropertyName + " " + comboBoxOperator.Text + FormattedValue ;
                     ResultFilterCaption += "\n" + comboBoxOperator.Text + "'" + FilterValue + "'";
                 }
 

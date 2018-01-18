@@ -78,12 +78,13 @@ namespace DgvFilterPopup
                 return;
             }
 
-            string ResultFilterExpression = "";
-            string ResultFilterCaption = OriginalDataGridViewColumnHeaderText;
+            var ResultFilterExpression = "";
+            var ResultFilterCaption = OriginalDataGridViewColumnHeaderText;
+            var BracketedDataPropertyName = "[" + this.DataGridViewColumn.DataPropertyName + "]";
 
             // Managing the NULL and NOT NULL cases which are type-independent
-            if (comboBoxOperator.Text == "= Ø") ResultFilterExpression = GetNullCondition(this.DataGridViewColumn.DataPropertyName);
-            if (comboBoxOperator.Text == "<> Ø") ResultFilterExpression = GetNotNullCondition(this.DataGridViewColumn.DataPropertyName);
+            if (comboBoxOperator.Text == "= Ø") ResultFilterExpression = GetNullCondition(BracketedDataPropertyName);
+            if (comboBoxOperator.Text == "<> Ø") ResultFilterExpression = GetNotNullCondition(BracketedDataPropertyName);
 
             if (ResultFilterExpression != "")
             {
@@ -99,7 +100,7 @@ namespace DgvFilterPopup
             FormattedValue = FormatValue(FilterValue, this.ColumnDataType);
             if (FormattedValue != "")
             {
-                ResultFilterExpression = this.DataGridViewColumn.DataPropertyName + " " + comboBoxOperator.Text + FormattedValue;
+                ResultFilterExpression = BracketedDataPropertyName + " " + comboBoxOperator.Text + FormattedValue;
                 ResultFilterCaption += "\n" + comboBoxOperator.Text + " " + dateTimePickerValue.Text;
             }
 
